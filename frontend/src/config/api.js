@@ -8,4 +8,5 @@ export const endpoints = {
   userOrders: (email) => `${API_BASE_URL}/orders/user/${email}`,
   orderById: (id) => `${API_BASE_URL}/orders/${id}`,
   userDeleteOrder: (email) => `${API_BASE_URL}/orders/user_delete/${email}`,
+  ingredients: `${API_BASE_URL}/ingredients`,
 };

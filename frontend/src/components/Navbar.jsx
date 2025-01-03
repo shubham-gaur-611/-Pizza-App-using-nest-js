@@ -43,11 +43,12 @@ function Navbar() {
                 </span>
               )}
             </Link>
-            {user ? (
-              <div className="flex items-center space-x-4">
-                <Link to="/orders" className="text-gray-700 hover:text-red-600">
+            <Link to="/orders" className="text-gray-700 hover:text-red-600">
                   My Orders
                 </Link>
+            {user ? (
+              <div className="flex items-center space-x-4">
+                
                 <span className="text-gray-700">{user.email}</span>
                 <button
                   onClick={logout}

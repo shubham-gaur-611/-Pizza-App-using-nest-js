@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { endpoints } from '../../config/api';
 import { useAuth } from '../../context/AuthContext';
+import axios from 'axios';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -13,24 +14,28 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(endpoints.login, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
+      // const response = await axios.post(endpoints.login, { email, password });
+      
+      // const response = await fetch(endpoints.login, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ email, password }),
+      // });
+      const response = await axios.post(endpoints.login, { email, password });
+      const data = await response.data;
       
       if(data.message.includes('Login successful')) {
         setMessage(data.message);
-        login(email, data.token); // Store the token
+        login(data.user.email, data.token, data.expiresIn); // Store the token
         navigate('/cart'); // Navigate back to cart
       }
       if(data.message.includes('Invalid credentials')) {
         setMessage(data.message);
       }
     } catch (error) {
+      console.error(error);
       setMessage('An error occurred during login');
     }
   };

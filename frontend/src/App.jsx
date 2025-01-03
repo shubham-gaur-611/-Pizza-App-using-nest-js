@@ -5,6 +5,7 @@ import Cart from './pages/Cart';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import OrderHistory from './pages/OrderHistory';
+import ProtectedRoute from './pages/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import './App.css';
 
@@ -20,7 +21,13 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/orders" element={<OrderHistory />} />
+            </Routes>
+            <Routes>
+              <Route path="/orders" element={
+                <ProtectedRoute>
+                  <OrderHistory />
+                </ProtectedRoute>
+              } />
             </Routes>
           </main>
         </div>

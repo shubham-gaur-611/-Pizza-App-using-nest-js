@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { endpoints } from '../../config/api';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -11,21 +12,23 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(endpoints.register, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
+      const response = await axios.post(endpoints.register, { email, password });
+
+      // const response = await fetch(endpoints.register, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ email, password }),
+      // });
+      const data = await response.data;
       alert(data.message);
       if(data.message.includes('Registration successful')) {
         setMessage(data.message);
         navigate('/login');
       }
     } catch (error) {
-      setMessage('An error occurred during registration');
+      console.error(error);
     }
   };
 

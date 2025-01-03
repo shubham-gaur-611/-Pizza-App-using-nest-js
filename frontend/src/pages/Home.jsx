@@ -1,4 +1,5 @@
-import { baseIngredients } from '../config/ingredients';
+import { useState, useEffect } from 'react';
+import { getIngredients } from '../services/ingredientsService';
 import IngredientSection from '../components/IngredientSection';
 import PizzaTotal from '../components/PizzaTotal';
 import { usePizzaBuilder } from '../hooks/usePizzaBuilder';
@@ -7,6 +8,29 @@ import { useNavigate } from 'react-router-dom';
 function Home() {
   const navigate = useNavigate();
   const basePrice = 10;
+  const [ingredients, setIngredients] = useState({
+    sauces: [],
+    cheeses: [],
+    toppings: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchIngredients = async () => {
+      try {
+        const data = await getIngredients();
+        setIngredients(data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load ingredients. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchIngredients();
+  }, []);
+
   const {
     selectedSauce,
     selectedCheese,
@@ -39,6 +63,14 @@ function Home() {
     }
   };
 
+  if (loading) {
+    return <div className="text-center mt-8">Loading ingredients...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center mt-8 text-red-500">{error}</div>;
+  }
+
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-center mb-8">Build Your Pizza</h1>
@@ -47,21 +79,21 @@ function Home() {
         
         <IngredientSection
           title="1. Choose Your Sauce"
-          ingredients={baseIngredients.sauces}
+          ingredients={ingredients.sauces}
           selected={selectedSauce}
           onToggle={toggleSauce}
         />
 
         <IngredientSection
-          title="2. Select Cheese"
-          ingredients={baseIngredients.cheeses}
+          title="2. Choose Your Cheese"
+          ingredients={ingredients.cheeses}
           selected={selectedCheese}
           onToggle={toggleCheese}
         />
 
         <IngredientSection
-          title="3. Add Toppings"
-          ingredients={baseIngredients.toppings}
+          title="3. Choose Your Toppings"
+          ingredients={ingredients.toppings}
           selected={selectedToppings}
           onToggle={toggleTopping}
         />
