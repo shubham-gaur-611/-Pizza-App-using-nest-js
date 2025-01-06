@@ -13,7 +13,7 @@ export default function Register() {
     e.preventDefault();
     try {
       const response = await axios.post(endpoints.register, { email, password });
-
+        
       // const response = await fetch(endpoints.register, {
       //   method: 'POST',
       //   headers: {
